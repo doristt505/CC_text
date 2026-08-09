@@ -22,7 +22,7 @@
 
 | 方式 | 怎么用 | 适合 |
 |---|---|---|
-| **网页版** | 打开 [在线地址](https://19858168025jj-collab.github.io/CC_text/)，填入 DeepSeek API Key | 想要点按钮式界面 |
+| **网页版** | 打开 [在线地址](https://doristt505.github.io/CC_text/)，填入 DeepSeek API Key | 想要点按钮式界面 |
 | **通用提示词** | 复制 [PROMPT.md](PROMPT.md) 粘到任意 AI 对话框 | 手上有 DeepSeek / ChatGPT / 豆包等任意一个 AI |
 | **Claude Skill** | 安装 `.claude/skills/novel-polish/` | Claude 用户，最省事 |
 

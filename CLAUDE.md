@@ -256,9 +256,9 @@ window.editor.annotations.getAll()
 ## 相关文档
 
 - [DeepSeek API 官方文档](https://platform.deepseek.com/docs)
-- GitHub 仓库: https://github.com/19858168025jj-collab/cc_text
+- GitHub 仓库: https://github.com/doristt505/CC_text
 
 ## 联系方式
 
 项目维护者: claude@anthropic.com
-问题反馈: https://github.com/19858168025jj-collab/cc_text/issues
+问题反馈: https://github.com/doristt505/CC_text/issues
