@@ -91,7 +91,7 @@ class TextProcessor {
     static applyAnnotations(originalText, annotations) {
         let result = originalText;
         const sorted = [...annotations]
-            .filter(a => a.status === 'accepted')
+            .filter(a => a.status === 'accepted' && a.category !== 'choice' && a.suggestion)
             .sort((a, b) => b.position.start - a.position.start); // 从后往前替换
 
         for (const anno of sorted) {

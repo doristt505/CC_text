@@ -30,7 +30,7 @@ class UIRenderer {
 
             // 添加标注部分
             const annoText = text.substring(start, end);
-            html += `<span class="annotated" data-anno-id="${anno.id}" data-type="${anno.type}" title="${anno.reason}">`;
+            html += `<span class="annotated" data-anno-id="${anno.id}" data-type="${anno.type}" data-category="${anno.category || 'hard'}" title="${anno.reason}">`;
             html += this.escapeHtml(annoText);
             html += `<span class="annotation-badge" title="点击查看建议">💭</span>`;
             html += '</span>';
@@ -81,28 +81,32 @@ class UIRenderer {
      * 创建单个批注项
      */
     static createAnnotationItem(anno, onAction) {
-        const item = createElement('div', `annotation-item ${anno.status}`);
+        const isChoice = anno.category === 'choice';
+        const item = createElement('div', `annotation-item ${anno.status}${isChoice ? ' is-choice' : ''}`);
 
         const header = createElement('div', 'annotation-header');
-        header.innerHTML = `
-            <span class="annotation-type ${anno.type}">${getTypeLabel(anno.type)}</span>
-            <span class="annotation-confidence">准确度: ${Math.round(anno.confidence * 100)}%</span>
-        `;
+        header.innerHTML = isChoice
+            ? `<span class="annotation-category choice">可能是选择</span>
+               <span class="annotation-type ${anno.type}">${getTypeLabel(anno.type)}</span>`
+            : `<span class="annotation-category hard">硬伤</span>
+               <span class="annotation-type ${anno.type}">${getTypeLabel(anno.type)}</span>`;
 
         const text = createElement('div', 'annotation-text');
-        text.innerHTML = `
-            <div><span class="annotation-original">${this.escapeHtml(anno.original)}</span></div>
-            <div style="margin: 0.3rem 0;">→</div>
-            <div><span class="annotation-suggestion">${this.escapeHtml(anno.suggestion)}</span></div>
-        `;
+        // 「可能是选择」没有替代方案——刻意不给，避免作者顺手接受掉自己的风格
+        text.innerHTML = isChoice
+            ? `<div><span class="annotation-neutral">${this.escapeHtml(anno.original)}</span></div>`
+            : `<div><span class="annotation-original">${this.escapeHtml(anno.original)}</span></div>
+               <div style="margin: 0.3rem 0;">→</div>
+               <div><span class="annotation-suggestion">${this.escapeHtml(anno.suggestion)}</span></div>`;
 
-        const reason = createElement('div', 'annotation-reason', this.escapeHtml(anno.reason));
+        const reason = createElement('div', 'annotation-reason',
+            (isChoice ? '我注意到：' : '') + this.escapeHtml(anno.reason));
 
         const actions = createElement('div', 'annotation-actions');
-        actions.innerHTML = `
-            <button class="annotation-btn accept" data-id="${anno.id}" data-action="accept">✓ 接受</button>
-            <button class="annotation-btn reject" data-id="${anno.id}" data-action="reject">✗ 拒绝</button>
-        `;
+        actions.innerHTML = isChoice
+            ? `<button class="annotation-btn" data-id="${anno.id}" data-action="reject">知道了，保留原样</button>`
+            : `<button class="annotation-btn accept" data-id="${anno.id}" data-action="accept">✓ 接受</button>
+               <button class="annotation-btn reject" data-id="${anno.id}" data-action="reject">✗ 拒绝</button>`;
 
         actions.addEventListener('click', (e) => {
             if (e.target.classList.contains('annotation-btn')) {

@@ -335,3 +335,51 @@
     flex: 1;
     max-width: 150px;
 }
+
+/* ===== 硬伤 vs 可能是选择 ===== */
+
+.annotation-category {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    margin-right: 0.35rem;
+    white-space: nowrap;
+}
+
+.annotation-category.hard {
+    background: rgba(244, 67, 54, 0.12);
+    color: #c62828;
+}
+
+.annotation-category.choice {
+    background: rgba(120, 120, 130, 0.14);
+    color: #4b5563;
+}
+
+/* 「可能是选择」整体做低对比处理——它是提示，不是待办 */
+.annotation-item.is-choice {
+    border-left: 4px solid #9ca3af;
+    background: #fbfbfc;
+}
+
+.annotation-item.is-choice .annotation-reason {
+    font-style: normal;
+    color: var(--text-primary);
+}
+
+.annotation-neutral {
+    background: rgba(120, 120, 130, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* 编辑区里「可能是选择」用虚线下划线，与硬伤的波浪线区分 */
+.editor-text .annotated[data-category="choice"] {
+    background: rgba(120, 120, 130, 0.1);
+    text-decoration: underline dotted #9ca3af;
+    text-underline-offset: 3px;
+}

@@ -100,7 +100,7 @@ class WizardRenderer {
     /**
      * 第⑤步：渲染5位读者反馈
      */
-    static renderReaders(container, readers) {
+    static renderReaders(container, readers, synthesis) {
         if (!readers || readers.length === 0) {
             container.innerHTML = '<p class="placeholder">暂无读者反馈</p>';
             return;
@@ -108,7 +108,26 @@ class WizardRenderer {
 
         const icons = ['📱', '🎓', '✍️', '🔍', '🎯'];
 
-        container.innerHTML = readers.map((reader, index) => `
+        const synthesisHtml = synthesis ? `
+            <div class="reader-synthesis">
+                <h3>📌 汇总</h3>
+                <div class="synthesis-row">
+                    <span class="synthesis-label shared">多人共同提到</span>
+                    <p>${this.escapeHtml(synthesis.shared_problems)}</p>
+                </div>
+                <div class="synthesis-row">
+                    <span class="synthesis-label single">单一视角的偏好</span>
+                    <p>${this.escapeHtml(synthesis.single_view_preferences)}</p>
+                </div>
+                <div class="synthesis-row">
+                    <span class="synthesis-label conflict">对立意见（取舍点）</span>
+                    <p>${this.escapeHtml(synthesis.conflicts)}</p>
+                </div>
+                <p class="synthesis-note">追更读者和目标受众代表的意见反映的是<strong>阅读成本</strong>，不是质量问题。他们说"读不下去"的地方，可能正是文学评论者说"全篇最好"的地方。</p>
+            </div>
+        ` : '';
+
+        container.innerHTML = synthesisHtml + readers.map((reader, index) => `
             <div class="reader-card">
                 <div class="reader-header">
                     <span class="reader-icon">${icons[index] || '👤'}</span>

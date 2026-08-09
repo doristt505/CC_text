@@ -15,6 +15,7 @@ class NovelEditor {
         this.branches = [];             // 第③步结果
         this.finalDraft = '';           // 第④步选定的终稿
         this.readerFeedback = [];       // 第⑤步结果
+        this.readerSynthesis = null;    // 第⑤步的汇总
 
         FileParser.init();
         this.initializeDOM();
@@ -406,8 +407,10 @@ class NovelEditor {
         this.elements.finishBtn.disabled = true;
 
         try {
-            this.readerFeedback = await this.api.getReaderFeedback(this.finalDraft);
-            WizardRenderer.renderReaders(this.elements.readersContent, this.readerFeedback);
+            const result = await this.api.getReaderFeedback(this.finalDraft);
+            this.readerFeedback = result.readers;
+            this.readerSynthesis = result.synthesis;
+            WizardRenderer.renderReaders(this.elements.readersContent, this.readerFeedback, this.readerSynthesis);
             UIRenderer.showNotification('读者反馈已生成', 'success');
         } catch (error) {
             console.error('Step5 error:', error);
@@ -449,6 +452,12 @@ class NovelEditor {
             this.readerFeedback.forEach(r => {
                 exportText += `【${r.persona}】\n阅读体验：${r.reading_experience}\n修改建议：${r.suggestions}\n\n`;
             });
+            if (this.readerSynthesis) {
+                const sy = this.readerSynthesis;
+                exportText += `【汇总】\n多人共同提到：${sy.shared_problems}\n`;
+                exportText += `单一视角的偏好：${sy.single_view_preferences}\n`;
+                exportText += `对立意见（取舍点）：${sy.conflicts}\n`;
+            }
         }
 
         exportAsText(exportText, '小说终稿.txt');

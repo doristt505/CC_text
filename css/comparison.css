@@ -1,0 +1,108 @@
+/* 对比视图样式 */
+
+.comparison-view {
+    display: flex;
+    height: 100%;
+    position: relative;
+}
+
+.comparison-pane {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    background: white;
+}
+
+.comparison-pane h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+}
+
+.comparison-pane.original h2 {
+    border-bottom-color: rgba(244, 67, 54, 0.5);
+}
+
+.comparison-pane.polished h2 {
+    border-bottom-color: rgba(76, 175, 80, 0.5);
+}
+
+.text-content {
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.text-content p {
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Diff 高亮 */
+.diff-unchanged {
+    color: var(--text-primary);
+}
+
+.diff-deleted {
+    background: rgba(244, 67, 54, 0.2);
+    color: #d32f2f;
+    text-decoration: line-through;
+    padding: 0 2px;
+}
+
+.diff-inserted {
+    background: rgba(76, 175, 80, 0.2);
+    color: #388e3c;
+    font-weight: 500;
+    padding: 0 2px;
+}
+
+/* 对比滑块 */
+.comparison-slider {
+    width: 4px;
+    background: var(--border);
+    cursor: col-resize;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.comparison-slider:hover {
+    background: var(--primary-light);
+}
+
+.comparison-slider::after {
+    content: '⋮';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    background: var(--primary-light);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+    user-select: none;
+    cursor: grab;
+    transition: all 0.2s;
+}
+
+.comparison-slider:hover::after {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+}
+
+.comparison-slider:active::after {
+    cursor: grabbing;
+}

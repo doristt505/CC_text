@@ -426,3 +426,60 @@
         gap: 0.3rem;
     }
 }
+
+/* ===== 第⑤步：读者反馈汇总 ===== */
+
+.reader-synthesis {
+    grid-column: 1 / -1;
+    background: var(--primary-very-light);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+}
+
+.reader-synthesis h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.synthesis-row {
+    display: flex;
+    gap: 0.9rem;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+}
+
+.synthesis-label {
+    flex-shrink: 0;
+    width: 130px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    text-align: center;
+}
+
+.synthesis-label.shared   { background: rgba(244, 67, 54, 0.12);  color: #c62828; }
+.synthesis-label.single   { background: rgba(120, 120, 130, 0.14); color: #4b5563; }
+.synthesis-label.conflict { background: rgba(255, 152, 0, 0.15);  color: #ef6c00; }
+
+.synthesis-row p {
+    flex: 1;
+    line-height: 1.6;
+    font-size: 0.92rem;
+}
+
+.synthesis-note {
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px dashed rgba(59, 130, 246, 0.3);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.step-hint {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}

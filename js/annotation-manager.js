@@ -19,6 +19,7 @@ class AnnotationManager {
         const normalized = {
             id,
             paraId: annotation.paraId || 'unknown',
+            category: annotation.category === '可能是选择' ? 'choice' : 'hard',
             type: annotation.type || 'word_choice',
             original: annotation.original || '',
             suggestion: annotation.suggestion || '',
@@ -158,7 +159,9 @@ class AnnotationManager {
      * 全部接受
      */
     acceptAll() {
-        const pending = this.filterByStatus('pending');
+        // 只接受硬伤。「可能是选择」没有替代方案，批量接受它们没有意义，
+        // 而且那正是最容易把作者风格顺手磨掉的一类。
+        const pending = this.filterByStatus('pending').filter(a => a.category !== 'choice');
         pending.forEach(a => this.accept(a.id));
         return pending.length;
     }
