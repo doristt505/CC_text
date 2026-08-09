@@ -1,0 +1,428 @@
+/* 五步流程向导样式 */
+
+.placeholder {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 3rem 1rem;
+}
+
+/* 步骤指示器 */
+.step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.5rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.step-item.active,
+.step-item.done {
+    opacity: 1;
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.step-item.active .step-circle {
+    background: var(--primary-light);
+    color: white;
+}
+
+.step-item.done .step-circle {
+    background: var(--success);
+    color: white;
+}
+
+.step-label {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.step-item.active .step-label {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.step-connector {
+    width: 40px;
+    height: 2px;
+    background: var(--border);
+    margin-bottom: 1.4rem;
+}
+
+/* 面板容器 */
+.wizard-pane {
+    padding: 0 !important;
+}
+
+.step-panel {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.step-panel.active {
+    display: flex;
+}
+
+.step-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.step-header h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.step-status {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.step-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.step-footer .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 第①步：编辑 + 批注 双栏 */
+.step1-body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.step1-editor {
+    flex: 1.4;
+    overflow-y: auto;
+    padding: 1.5rem;
+    line-height: 1.8;
+    border-right: 1px solid var(--border);
+}
+
+.step1-annotations {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+.step1-annotations .annotation-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.step1-batch-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    flex-shrink: 0;
+}
+
+.step1-batch-actions .btn {
+    flex: 1;
+}
+
+/* 第②步：结构分析 */
+.structure-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.structure-block {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.structure-block:last-child {
+    border-bottom: none;
+}
+
+.structure-block h3 {
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+    color: var(--primary);
+}
+
+.structure-block p {
+    line-height: 1.7;
+    color: var(--text-primary);
+}
+
+.element-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.element-row {
+    display: grid;
+    grid-template-columns: 110px 80px 1fr;
+    gap: 0.75rem;
+    align-items: center;
+    background: var(--bg-light);
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.5rem;
+}
+
+.element-name {
+    font-weight: 600;
+}
+
+.element-status {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    text-align: center;
+}
+
+.element-status.ok {
+    background: rgba(76, 175, 80, 0.15);
+    color: #388e3c;
+}
+
+.element-status.warn {
+    background: rgba(255, 152, 0, 0.15);
+    color: #ef6c00;
+}
+
+.element-comment {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.suggestion-list {
+    padding-left: 1.2rem;
+    line-height: 1.8;
+}
+
+/* 第③步：分支卡片 */
+.branches-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.branch-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.branch-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+}
+
+.branch-index {
+    background: var(--primary-light);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 1rem;
+}
+
+.branch-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+.branch-summary {
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.branch-detail summary {
+    cursor: pointer;
+    color: var(--primary-light);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.branch-fulltext {
+    margin-top: 0.75rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 0.5rem;
+    white-space: pre-wrap;
+    line-height: 1.8;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* 第④步：定稿选择 */
+.finalize-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.finalize-card {
+    display: flex;
+    gap: 1rem;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.finalize-card:hover {
+    border-color: var(--primary-light);
+}
+
+.finalize-card.selected {
+    border-color: var(--primary-light);
+    background: var(--primary-very-light);
+}
+
+.finalize-card input[type="radio"] {
+    margin-top: 0.3rem;
+    accent-color: var(--primary-light);
+}
+
+.finalize-card-body {
+    flex: 1;
+}
+
+.finalize-card-title {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+.finalize-card-summary {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+/* 第⑤步：读者反馈卡片 */
+.readers-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.25rem;
+    align-content: start;
+}
+
+.reader-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.reader-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.reader-icon {
+    font-size: 1.4rem;
+}
+
+.reader-persona {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.reader-section {
+    margin-bottom: 0.75rem;
+}
+
+.reader-section:last-child {
+    margin-bottom: 0;
+}
+
+.reader-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.3rem;
+}
+
+.reader-section p {
+    line-height: 1.6;
+    color: var(--text-primary);
+    font-size: 0.92rem;
+}
+
+@media (max-width: 900px) {
+    .step1-body {
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .step1-editor {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .element-row {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+    }
+}

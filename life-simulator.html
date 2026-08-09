@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>人生模拟器 · 梦想实现规划师</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e2e8f0 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            padding: 2rem 1.5rem;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 标题区 */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #1e3c72, #2b4c7c);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: #475569;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* 双栏布局 */
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.8rem;
+        }
+
+        /* 左侧配置面板 */
+        .config-panel {
+            flex: 1.2;
+            min-width: 300px;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+            padding: 1.5rem 1.8rem;
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+
+        /* 右侧结果面板 */
+        .result-panel {
+            flex: 2;
+            min-width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            padding: 1.5rem 1.8rem;
+            transition: all 0.2s;
+            border: 1px solid #eef2ff;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            border-left: 5px solid #3b82f6;
+            padding-left: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 1rem 1.2rem;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .field-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #4b5563;
+        }
+
+        input, select, textarea {
+            padding: 0.6rem 0.8rem;
+            border-radius: 1rem;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        .inline-row {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-group {
+            flex-direction: row;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group label {
+            margin-right: 0.5rem;
+        }
+
+        button {
+            background: #1e293b;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.4rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        button.primary {
+            background: #3b82f6;
+            box-shadow: 0 4px 10px rgba(59,130,246,0.3);
+        }
+
+        button.primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        button.secondary {
+            background: #334155;
+        }
+
+        button.secondary:hover {
+            background: #1e293b;
+        }
+
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            gap: 0.8rem;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.5rem;
+        }
+
+        .badge {
+            background: #eef2ff;
+            color: #1e40af;
+            border-radius: 1rem;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .dream-score {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .milestone {
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .timeline-plan {
+            background: #fef9e3;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 0.8rem;
+        }
+
+        .plan-item {
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+            border-left: 3px solid #f59e0b;
+        }
+
+        .success {
+            color: #15803d;
+            font-weight: 600;
+        }
+
+        .warning {
+            color: #b45309;
+        }
+
+        hr {
+            margin: 1rem 0;
+            border-color: #e2e8f0;
+        }
+
+        .chat-box {
+            height: 230px;
+            overflow: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            background: #f8fafc;
+            margin-bottom: 0.8rem;
+        }
+
+        .chat-msg {
+            margin-bottom: 0.6rem;
+            font-size: 0.86rem;
+            line-height: 1.5;
+        }
+
+        .chat-msg.user { color: #1d4ed8; }
+        .chat-msg.coach { color: #0f172a; }
+
+        @media (max-width: 780px) {
+            body { padding: 1rem; }
+            .config-panel, .result-panel { min-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🎭 人生模拟器 · 梦想执⾏版</h1>
+        <p>基于财务模型 + 生涯规划 | 趋势模拟，辅助决策</p>
+    </div>
+
+    <div class="dashboard">
+        <!-- 左侧配置区 -->
+        <div class="config-panel">
+            <div class="card-title">📋 角色信息配置</div>
+            <div class="form-grid">
+                <div class="field-group"><label>目前年龄</label><input type="number" id="age" value="30" step="1"></div>
+                <div class="field-group"><label>专业</label><input type="text" id="major" value="环境工程"></div>
+                <div class="field-group"><label>性别</label><select id="gender"><option>女</option><option>男</option></select></div>
+                <div class="field-group"><label>出生日期</label><input type="date" id="birthDate" value="1996-05-28"></div>
+                <div class="field-group"><label>出生时间(时)</label><input type="number" id="birthHour" value="5" step="1" min="0" max="23"></div>
+                <div class="field-group"><label>星座(自动)</label><input type="text" id="zodiac" readonly placeholder="自动计算"></div>
+                <div class="field-group"><label>八字(简示)</label><input type="text" id="bazi" readonly placeholder="趣味参考"></div>
+                <div class="field-group"><label>存款(万元)</label><input type="number" id="savings" value="12" step="1"></div>
+                <div class="field-group"><label>目前年收入(万元)</label><input type="number" id="income" value="18" step="0.5"></div>
+                <div class="field-group"><label>主要职业</label><input type="text" id="job1" value="低碳产品经理"></div>
+                <div class="field-group"><label>其他职业1</label><input type="text" id="job2" value="自媒体博主"></div>
+                <div class="field-group"><label>其他职业2</label><input type="text" id="job3" value="作家"></div>
+                <!-- 新增核心字段 -->
+                <div class="field-group"><label>🎓 学历</label><select id="education"><option value="博士">博士</option><option value="硕士">硕士</option><option value="本科" selected>本科</option><option value="大专">大专</option><option value="高中及以下">高中及以下</option></select></div>
+                <div class="field-group"><label>🏙️ 定居城市</label><select id="cityTier"><option value="一线">一线城市(北上广深)</option><option value="新一线">新一线/强二线</option><option value="二线" selected>二线城市</option><option value="三四线">三四线及以下</option></select></div>
+                <div class="field-group checkbox-group"><label>🏠 是否想要买房</label><input type="checkbox" id="wantHouse" checked style="width: 1.2rem;"></div>
+                <div class="field-group checkbox-group"><label>🚗 是否想要买车</label><input type="checkbox" id="wantCar" checked style="width: 1.2rem;"></div>
+                <div class="field-group"><label>爱好(可选)</label><input type="text" id="hobbies" value="阅读、跑步、旅行、爬山、攀岩、骑行"></div>
+                <div class="field-group"><label>感情状况</label><input type="text" id="relationship" value="单身"></div>
+                <div class="field-group"><label>孩子数量</label><input type="number" id="children" value="0" step="1"></div>
+                <div class="field-group"><label>宠物数量</label><input type="number" id="pets" value="3"></div>
+                <div class="field-group"><label>家庭成员人数</label><input type="number" id="familySize" value="3"></div>
+                <div class="field-group checkbox-group"><label>是否赡养家人</label><input type="checkbox" id="supportFamily"></div>
+            </div>
+            <div class="field-group" style="margin-top: 0.8rem;"><label>✨ 梦想 (支持自定义)</label><textarea id="dreamText" rows="2">35岁前财务稳定并实现买房，买车，出一本书，40岁创业成功，各地旅游，45岁财务自由</textarea></div>
+            <div class="action-bar">
+                <div><button id="saveConfigBtn" class="secondary">💾 保存当前配置</button></div>
+                <div><button id="generateBtn" class="primary">🔮 生成人生预测</button></div>
+            </div>
+            <div class="field-group" style="margin-top: 0.5rem; font-size:0.7rem; color:#6c757d;">* 增加学历、定居城市、买房/买车意愿，预测更精准</div>
+        </div>
+
+        <!-- 右侧结果区 -->
+        <div class="result-panel">
+            <div class="card" id="resultCard">
+                <div class="card-title">📊 梦想实现评估 & 五年行动蓝图</div>
+                <div id="dreamAnalysis">
+                    <!-- 动态渲染预测结果 -->
+                    <div style="color:#6c757d; text-align:center; padding:2rem;">点击“生成人生预测” 获得个性化报告</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">📌 参考速写 · 八字/星座</div>
+                <div id="astroInfo" style="font-size:0.9rem; display:flex; flex-wrap:wrap; gap:0.8rem; justify-content:space-between;">
+                    <span>✨ 星座: --</span>
+                    <span>📜 八字趣味: --</span>
+                    <span>💡 日主五行: 水 · 灵活多才</span>
+                </div>
+                <hr>
+                <div style="font-size:0.8rem; color:#475569;">基于你的职业组合(主副业联动) + 学历城市因素，动态模拟未来现金流，评估梦想缺口并生成每5年破局行动。</div>
+            </div>
+            <div class="card">
+                <div class="card-title">🧠 人生教练聊天</div>
+                <div id="chatBox" class="chat-box"></div>
+                <div class="inline-row">
+                    <input id="chatInput" type="text" placeholder="例如：我35岁前出书该怎么安排？" style="flex:1;">
+                    <button id="chatSendBtn" class="primary">发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const STEMS = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+    const BRANCHES = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+    const MONTH_BRANCHES = ["寅","卯","辰","巳","午","未","申","酉","戌","亥","子","丑"];
+    let lastPrediction = null;
+
+    function getZodiac(dateStr) {
+        if(!dateStr) return "未知";
+        const date = new Date(dateStr);
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "水瓶座";
+        if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return "双鱼座";
+        if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "白羊座";
+        if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "金牛座";
+        if ((month === 5 && day >= 21) || (month === 6 && day <= 21)) return "双子座";
+        if ((month === 6 && day >= 22) || (month === 7 && day <= 22)) return "巨蟹座";
+        if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "狮子座";
+        if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "处女座";
+        if ((month === 9 && day >= 23) || (month === 10 && day <= 23)) return "天秤座";
+        if ((month === 10 && day >= 24) || (month === 11 && day <= 22)) return "天蝎座";
+        if ((month === 11 && day >= 23) || (month === 12 && day <= 21)) return "射手座";
+        return "摩羯座";
+    }
+
+    function stemBranch(index) {
+        const stem = STEMS[((index % 10) + 10) % 10];
+        const branch = BRANCHES[((index % 12) + 12) % 12];
+        return `${stem}${branch}`;
+    }
+
+    function hourBranch(hour) {
+        const h = ((hour % 24) + 24) % 24;
+        return BRANCHES[Math.floor((h + 1) / 2) % 12];
+    }
+
+    function stemElement(stem) {
+        if (stem === "甲" || stem === "乙") return "木";
+        if (stem === "丙" || stem === "丁") return "火";
+        if (stem === "戊" || stem === "己") return "土";
+        if (stem === "庚" || stem === "辛") return "金";
+        return "水";
+    }
+
+    function calcBazi(dateStr, hour) {
+        const date = new Date(`${dateStr}T00:00:00`);
+        const y = date.getFullYear();
+        const m = date.getMonth() + 1;
+        const d = date.getDate();
+        const yearPillar = stemBranch(y - 1984);
+        const yearStemIdx = ((y - 4) % 10 + 10) % 10;
+        const monthStemIdx = (yearStemIdx * 2 + m) % 10;
+        const monthPillar = `${STEMS[monthStemIdx]}${MONTH_BRANCHES[(m + 10) % 12]}`;
+        const baseDate = new Date(Date.UTC(1984, 1, 2));
+        const curDate = new Date(Date.UTC(y, m - 1, d));
+        const diffDays = Math.floor((curDate.getTime() - baseDate.getTime()) / 86400000);
+        const dayPillar = stemBranch(diffDays);
+        const dStem = dayPillar[0];
+        const hb = hourBranch(hour);
+        const hStemIdx = (STEMS.indexOf(dStem) * 2 + BRANCHES.indexOf(hb)) % 10;
+        const hourPillar = `${STEMS[hStemIdx]}${hb}`;
+        return { pillars: `${yearPillar} ${monthPillar} ${dayPillar} ${hourPillar}`, element: stemElement(dStem) };
+    }
+
+    function parseDreamAges(text, currentAge) {
+        const arr = [];
+        const matches = text.match(/(\d{2})岁/g) || [];
+        matches.forEach((s) => arr.push(parseInt(s.replace("岁", ""), 10)));
+        return arr.length ? Math.max(...arr) : currentAge + 12;
+    }
+
+    function calcRetirementNeed(annualIncome, annualExpenseRate = 0.65) {
+        const annualExpense = annualIncome * annualExpenseRate;
+        const pensionAnnual = 4.2;
+        const years = 25;
+        const rawNeed = annualExpense * years;
+        const pensionCover = pensionAnnual * years;
+        return Math.max(60, Math.round(rawNeed - pensionCover));
+    }
+
+    function computeDreamFeasibility(p) {
+        const eduFactor = { "博士":0.12, "硕士":0.095, "本科":0.075, "大专":0.06, "高中及以下":0.045 };
+        const growth = (eduFactor[p.education] || 0.07) + Math.min(0.04, (p.jobs.length - 1) * 0.015);
+        const housePricePerArea = { "一线":58000, "新一线":28000, "二线":16000, "三四线":8000 };
+        const cityPrice = housePricePerArea[p.cityTier] || 18000;
+        const houseCostWan = cityPrice * 85 * 0.3 / 10000;
+        const carCostWan = 18;
+        const retirementNeed = calcRetirementNeed(p.income);
+        const targetEndAge = parseDreamAges(p.dreamText, p.age);
+        let buyHouseAge = 35;
+        let buyCarAge = 34;
+        const containsBook = p.dreamText.includes("出书");
+
+        let netWorth = p.savings;
+        let income = p.income;
+        const records = [];
+        for (let age = p.age; age <= targetEndAge; age += 1) {
+            netWorth = netWorth + income * 0.32 + netWorth * 0.04;
+            records.push({ age, income, netWorth });
+            income = income * (1 + growth);
+        }
+
+        const getRecord = (age) => records.find((x) => x.age === age) || records[records.length - 1];
+        const milestones = [];
+        if (p.wantHouse) milestones.push({ type: "买房", age: buyHouseAge, need: houseCostWan });
+        if (p.wantCar) milestones.push({ type: "买车", age: buyCarAge, need: carCostWan });
+        if (containsBook) milestones.push({ type: "出书项目", age: Math.min(35, targetEndAge), need: 8 });
+        if (p.dreamText.includes("创业")) milestones.push({ type: "创业启动金", age: Math.min(40, targetEndAge), need: 45 });
+        if (p.dreamText.includes("财务自由")) milestones.push({ type: "财务自由", age: targetEndAge, need: retirementNeed });
+
+        const dreamResults = milestones.map((m) => {
+            const r = getRecord(m.age);
+            const ok = r.netWorth >= m.need;
+            return {
+                ...m,
+                available: Math.round(r.netWorth),
+                status: ok ? "✅ 有望实现" : "⚠️ 有缺口",
+                gap: ok ? 0 : Math.round(m.need - r.netWorth),
+            };
+        });
+
+        const fiveYearNodes = [];
+        for (let age = p.age; age <= targetEndAge; age += 5) {
+            const r = getRecord(age);
+            const nodeText = age <= 35
+                ? "扩展主业影响力并验证副业变现。"
+                : "优化现金流结构，控制风险敞口。";
+            fiveYearNodes.push({ age, text: `${nodeText} 预计净资产 ${Math.round(r.netWorth)} 万。` });
+        }
+
+        const annualPlans = [];
+        for (let age = p.age; age <= targetEndAge; age += 1) {
+            const r = getRecord(age);
+            const acts = [];
+            acts.push("主业：争取更高价值项目，提升议价。");
+            acts.push("财务：固定储蓄30%+，每年做资产复盘。");
+            if (containsBook && age <= 35) {
+                if (age <= 32) acts.push("出书：每周输出1篇主题文章，沉淀选题。");
+                else if (age <= 34) acts.push("出书：完成大纲和样章，联系出版社/平台。");
+                else acts.push("出书：完成定稿与发行，配合内容宣发。");
+            }
+            if (p.dreamText.includes("创业") && age >= 36) acts.push("创业：先跑低成本MVP，再扩大投入。");
+            annualPlans.push({ age, text: acts.join(" ") + `（参考净资产 ${Math.round(r.netWorth)} 万）` });
+        }
+
+        return { dreamResults, annualPlans, fiveYearNodes, growth, targetEndAge, retirementNeed, records };
+    }
+
+    function calcDaYun(birthYear, startAge, element) {
+        const traits = {
+            木: "重成长与扩张，利学习和人脉。",
+            火: "重表现与突破，利曝光和执行。",
+            土: "重稳定与积累，利资产和长期主义。",
+            金: "重结构与效率，利专业化与管理。",
+            水: "重流动与连接，利跨界和资源整合。",
+        };
+        const ranges = [];
+        for (let i = 0; i < 7; i += 1) {
+            const s = startAge + i * 10;
+            const e = s + 9;
+            ranges.push(`${s}-${e}岁：${traits[element]}`);
+        }
+        return ranges;
+    }
+
+    function collectFormData() {
+        const age = parseInt(document.getElementById("age").value, 10) || 30;
+        const birthDate = document.getElementById("birthDate").value;
+        const birthHour = parseInt(document.getElementById("birthHour").value, 10) || 0;
+        const zodiac = getZodiac(birthDate);
+        const bazi = calcBazi(birthDate, birthHour);
+        return {
+            age,
+            major: document.getElementById("major").value,
+            gender: document.getElementById("gender").value,
+            savings: parseFloat(document.getElementById("savings").value) || 0,
+            income: parseFloat(document.getElementById("income").value) || 0,
+            education: document.getElementById("education").value,
+            cityTier: document.getElementById("cityTier").value,
+            wantHouse: document.getElementById("wantHouse").checked,
+            wantCar: document.getElementById("wantCar").checked,
+            dreamText: document.getElementById("dreamText").value,
+            jobs: [document.getElementById("job1").value, document.getElementById("job2").value, document.getElementById("job3").value].filter(Boolean),
+            birthDate,
+            birthHour,
+            zodiac,
+            baziStr: bazi.pillars,
+            dayElement: bazi.element,
+        };
+    }
+
+    function renderPrediction() {
+        const data = collectFormData();
+        const result = computeDreamFeasibility(data);
+        lastPrediction = { data, result };
+        document.getElementById("zodiac").value = data.zodiac;
+        document.getElementById("bazi").value = data.baziStr;
+        const birthYear = new Date(data.birthDate).getFullYear();
+        const daYun = calcDaYun(birthYear, 6 + ((new Date(data.birthDate).getMonth() + 1) % 3), data.dayElement);
+        document.getElementById("astroInfo").innerHTML = `<span>✨ 星座: ${data.zodiac}</span><span>📜 四柱: ${data.baziStr}</span><span>💡 日主五行: ${data.dayElement}</span><span>🧭 大运: ${daYun[0]}</span>`;
+
+        let html = `<div class="dream-score"><strong>🏆 梦想实现总评</strong><br>目标窗口：${data.age}~${result.targetEndAge}岁。你现在走在正确轨道上，持续行动会把不确定变成确定。<br><span class="badge">预估收入年增速 ${Math.round(result.growth * 100)}%</span></div>`;
+        html += `<div><strong>🎯 关键里程碑评估</strong>`;
+        result.dreamResults.forEach((r) => {
+            html += `<div class="milestone"><strong>${r.type}</strong>（${r.age}岁）<br>所需约 ${Math.round(r.need)} 万，届时预计净资产 ${r.available} 万：<span class="${r.gap ? "warning" : "success"}">${r.status}</span>${r.gap ? `，缺口 ${r.gap} 万` : ""}</div>`;
+        });
+        html += `</div>`;
+        html += `<div style="margin-top:1rem;"><strong>🗓️ 每5年关键节点</strong></div>`;
+        result.fiveYearNodes.forEach((n) => { html += `<div class="timeline-plan">📌 ${n.age}岁：${n.text}</div>`; });
+        html += `<div style="margin-top:1rem;"><strong>📅 每年行动蓝图（到梦想目标年龄）</strong></div>`;
+        result.annualPlans.forEach((p) => { html += `<div class="milestone"><strong>${p.age}岁</strong>：${p.text}</div>`; });
+        html += `<hr><div style="font-size:0.8rem;background:#f1f5f9;border-radius:1rem;padding:0.8rem;">财务自由资金按“年支出-养老金覆盖”估算：约 <strong>${result.retirementNeed} 万</strong>（已考虑每年约4.2万养老金、25年退休期），比原先1741万更贴近现实。</div>`;
+        html += `<div style="margin-top:0.8rem;font-size:0.86rem;color:#1e3a8a;">🌟 鼓励语：你不是在等梦想发生，而是在用每一年的行动把它兑现。只要连续做对关键动作，时间就是你的朋友。</div>`;
+        document.getElementById("dreamAnalysis").innerHTML = html;
+    }
+
+    function pushChat(role, text) {
+        const box = document.getElementById("chatBox");
+        const div = document.createElement("div");
+        div.className = `chat-msg ${role}`;
+        div.innerHTML = role === "user" ? `你：${text}` : `教练：${text}`;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function coachReply(msg) {
+        if (!lastPrediction) return "先点一次“生成人生预测”，我会按你的最新数据给建议。";
+        const lower = msg.toLowerCase();
+        const { data, result } = lastPrediction;
+        if (lower.includes("出书")) return `你目标35岁前出书，先按三步走：1) 每周固定2次写作；2) 32-34岁完成大纲+样章；3) 35岁前定稿并发行。当前建议从“每周1篇”开始。`;
+        if (lower.includes("买房")) {
+            const house = result.dreamResults.find((x) => x.type === "买房");
+            return house ? `预计${house.age}岁节点，当前缺口约${house.gap}万。优先提高主业收入和储蓄率，不建议过早加杠杆。` : "你当前未勾选买房目标，可先勾选后重新预测。";
+        }
+        if (lower.includes("财务自由")) return `考虑养老金后，你的财务自由基底约${result.retirementNeed}万。核心是提升长期现金流，而不是一次性追求超高存款。`;
+        return `你的梦想窗口到${result.targetEndAge}岁。先执行每年蓝图里的前三条，把“高频行动”做满，成功概率会明显提升。`;
+    }
+
+    function sendChat() {
+        const input = document.getElementById("chatInput");
+        const text = input.value.trim();
+        if (!text) return;
+        pushChat("user", text);
+        pushChat("coach", coachReply(text));
+        input.value = "";
+    }
+
+    function saveConfiguration() {
+        const ids = ["age","major","gender","birthDate","birthHour","savings","income","job1","job2","job3","education","cityTier","wantHouse","wantCar","dreamText","hobbies","relationship","children","pets","familySize","supportFamily"];
+        const config = {};
+        ids.forEach((id) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            config[id] = el.type === "checkbox" ? el.checked : el.value;
+        });
+        localStorage.setItem("lifeSimulatorConfig", JSON.stringify(config));
+        alert("✅ 配置已保存。");
+    }
+
+    function loadConfiguration() {
+        const saved = localStorage.getItem("lifeSimulatorConfig");
+        if (!saved) return;
+        const config = JSON.parse(saved);
+        Object.entries(config).forEach(([k, v]) => {
+            const el = document.getElementById(k);
+            if (!el) return;
+            if (el.type === "checkbox") el.checked = v;
+            else el.value = v;
+        });
+    }
+
+    function updateAstroFromBirth() {
+        const date = document.getElementById("birthDate").value;
+        const hour = parseInt(document.getElementById("birthHour").value, 10) || 0;
+        if (!date) return;
+        document.getElementById("zodiac").value = getZodiac(date);
+        document.getElementById("bazi").value = calcBazi(date, hour).pillars;
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", renderPrediction);
+    document.getElementById("saveConfigBtn").addEventListener("click", saveConfiguration);
+    document.getElementById("birthDate").addEventListener("change", updateAstroFromBirth);
+    document.getElementById("birthHour").addEventListener("input", updateAstroFromBirth);
+    document.getElementById("chatSendBtn").addEventListener("click", sendChat);
+    document.getElementById("chatInput").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") sendChat();
+    });
+
+    loadConfiguration();
+    updateAstroFromBirth();
+    renderPrediction();
+    pushChat("coach", "欢迎来到人生教练模式。你可以问我：出书计划、买房时机、财务自由路径。");
+</script>
+</body>
+</html>
