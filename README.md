@@ -18,15 +18,16 @@
 
 两个停顿关口是刻意设计的：第③步的分支必须建立在作者已确认的文字上，第⑤步的读者必须读作者真正选定的那一版。
 
-## 三种用法
+## 四种用法
 
 | 方式 | 怎么用 | 适合 |
 |---|---|---|
 | **网页版** | 打开 [在线地址](https://doristt505.github.io/CC_text/)，填入 DeepSeek API Key | 想要点按钮式界面 |
 | **通用提示词** | 复制 [PROMPT.md](PROMPT.md) 粘到任意 AI 对话框 | 手上有 DeepSeek / ChatGPT / 豆包等任意一个 AI |
 | **Claude Skill** | 安装 `.claude/skills/novel-polish/` | Claude 用户，最省事 |
+| **其他 AI 工具** | 把 [portable-skill/AGENTS.md](portable-skill/AGENTS.md) 复制到你放稿子的文件夹 | Codex / Cursor / Copilot / Gemini 等 |
 
-三种方式流程完全一致，选顺手的就行。
+四种方式流程完全一致，选顺手的就行。
 
 ## 网页版说明
 
@@ -56,6 +57,7 @@ css/                    样式
 js/                     业务逻辑（详见 CLAUDE.md）
 lib/                    docx/pdf 解析库（本地打包，无需联网）
 .claude/skills/         Claude Skill 版本
+portable-skill/         通用版（AGENTS.md，供 Codex/Cursor 等其他工具使用）
 life-simulator.html     早期的另一个小项目，与本工具无关
 ```
 
